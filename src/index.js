@@ -72,14 +72,22 @@ function Header() {
 }
 
 function Menu() {
+  const pizzas = pizzaData;
+  // const pizzas = [];
+  const numPizzas = pizzas.length;
   return (
     <div className="menu">
       <h2>Our Menu</h2>
-      <ul className="pizzas">
-        {pizzaData.map(pizza => (
-          <Pizza pizzaObj={pizza} key={pizza.name}/>
-        ))}
-      </ul>
+
+      {numPizzas > 0 ? (
+        <ul className="pizzas">
+          {pizzas.map((pizza) => (
+            <Pizza pizzaObj={pizza} key={pizza.name} />
+          ))}
+        </ul>
+      ) : (
+        <p>We're still working on our menu. Please come back later</p>
+      )}
       {/* {<Pizza
         name="Pizza Spinachi"
         ingredients="Tomato, mozarella, spinach, and ricotta cheese"
@@ -94,28 +102,45 @@ function Pizza(props) {
   return (
     <li className="pizza">
       <img src={props.pizzaObj.photoName} alt={props.pizzaObj.name} />
-      <h3>{props.pizzaObj.name}</h3>
-      <p>{props.pizzaObj.ingredients}</p>
-      <span>{props.pizzaObj.price}</span>
+      <div>
+        <h3>{props.pizzaObj.name}</h3>
+        <p>{props.pizzaObj.ingredients}</p>
+        <span>{props.pizzaObj.price}</span>
+      </div>
     </li>
   );
 }
 
 function Footer() {
   const hour = new Date().getHours();
-  const openHour = 12;
-  const closeHour = 22;
-
-  // if (hour >= openHour && hour <= closeHour) alert("We're currently open");
-  // else alert("We're closed");
+  const openHour = 10;
+  const closeHour = 23;
+  const isOpen = hour >= openHour && hour <= closeHour;
+  console.log(isOpen, hour);
 
   return (
     <footer className="footer">
-      {new Date().toLocaleTimeString()}We're currently open
+      {isOpen ? (
+        <Order closeHours={closeHour} />
+      ) : (
+        <p>
+          We're happy to welcome you between {openHour}:00 and {closeHour}:00.
+        </p>
+      )}
     </footer>
   );
 }
-
+function Order(props) {
+  return (
+    <div className="order">
+      <p>
+        We're open until until {props.closeHours}:00. Come visit us or order
+        online.
+      </p>
+      <button className="btn">Order</button>
+    </div>
+  );
+}
 const root = ReactDom.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
